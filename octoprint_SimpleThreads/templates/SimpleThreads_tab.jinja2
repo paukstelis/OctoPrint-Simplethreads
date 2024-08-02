@@ -3,42 +3,49 @@
             
             <div class="span5">
                 <label for="depth">Thread length (mm):
+                <i class="icon icon-info-sign" title="The total length of threads to cut" data-toggle="tooltip"></i>
                 <input id="depth" type="number" step="any" data-bind="value: depth">
                 </label>
             </div>
             
             <div class="span5">
+                <label for="pitch">Pitch (mm):
+                <i class="icon icon-info-sign" title="The thread pitch. The amount the cutter will move with each full rotation." data-toggle="tooltip"></i>
+                <input id="pitch" type="number" step="any" data-bind="value: pitch">
+                </label>
+            </div>
+            
+            <div class="span5">
                 <label for="cut_depth">Depth of threads (mm):
+                <i class="icon icon-info-sign" title="The final depth of the threads." data-toggle="tooltip"></i>
                 <input id="cut_depth" type="number" step="any" data-bind="value: cut_depth">
                 </label>
             </div>
             
             <div class="span5">
                 <label for="passes">Passes:
+                <i class="icon icon-info-sign" title="The number of passes taken to reach the final thread depth." data-toggle="tooltip"></i>
                 <input id="passes" type="number" step="any" data-bind="value: passes">
                 </label>
             </div>
 
             <div class="span5">
-                <label for="pitch">Pitch (mm):
-                <input id="pitch" type="number" step="any" data-bind="value: pitch">
-                </label>
-            </div>
-
-            <div class="span5">
                 <label for="feed_rate">Feed Rate (inverse time):
+                <i class="icon icon-info-sign" title="How fast the thread is cut. This is done in inverse time mode, so 1 minute divided by this value will determine how many seconds it take to do the complete rotation." data-toggle="tooltip"></i>
                 <input id="feed_rate" type="number" step="any" data-bind="value: feed_rate">
                 </label>
             </div>
 
             <div class="span5">
                 <label for="lead_in">Lead in distance (mm):
+                <i class="icon icon-info-sign" title="The lead in distance makes it easier to get the threads started. Use with caution." data-toggle="tooltip"></i>
                 <input id="lead_in" type="number" step="any" data-bind="value: lead_in">
                 </label>
             </div>
 
             <div class="span12">
                 <label for="oposition">Thread Type:
+                <i class="icon icon-info-sign" title="If the threads are internal or external." data-toggle="tooltip"></i>
                     <select class="span4" id="position" name="origin_sel" data-bind="value: origin">
                         <option value="external">External</option>
                         <option value="internal">Internal</option>
