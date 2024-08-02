@@ -122,7 +122,6 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
             self.cut_depth = float(data["cut_depth"])
             self.passes = int(data["passes"])
             self.pitch = float(data["pitch"])
-            self.modifyA = bool(data["modifyA"])
             self.feed_rate = int(data["feed_rate"])
             self.lead_in = bool(data["lead_in"])
             self.position = data["position"]

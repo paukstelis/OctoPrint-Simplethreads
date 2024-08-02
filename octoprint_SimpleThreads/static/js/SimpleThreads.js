@@ -35,7 +35,7 @@ $(function() {
                 position: self.position(),
             };
 
-            OctoPrint.simpleApiCommand("simplethreads", "create_threads", data)
+            OctoPrint.simpleApiCommand("SimpleThreads", "create_threads", data)
                 .done(function(response) {
                     console.log("GCode written successfully.");
                 })
@@ -54,6 +54,6 @@ $(function() {
         // ViewModels your plugin depends on, e.g. loginStateViewModel, settingsViewModel, ...
         dependencies: ["filesViewModel","accessViewModel"],
         // Elements to bind to, e.g. #settings_plugin_gcode_ripper, #tab_plugin_gcode_ripper, ...
-        elements: [ "#tab_plugin_simplethreads", ]
+        elements: [ "#tab_plugin_SimpleThreads", ]
     });
 });
