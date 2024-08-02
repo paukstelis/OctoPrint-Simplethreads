@@ -57,9 +57,11 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
         A_dir = "A-360"
         Z_sign = -1
         x_steps = 0
+        name="EXT"
         if self.position == "internal":
             A_dir = "A360"
             Z_sign = 1
+            name="INT"
 
         Z_val = self.cut_depth*Z_sign
         lead_val = 0
@@ -71,7 +73,7 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
             #calculate initial lead_in based on internal/external and the value given
             #need to know if it is greater than 1 pitch length
             lead_val = self.lead_in/self.passes
-            x_steps = int(self.lead_in/self.pitch)
+            x_steps = self.lead_in/self.pitch
             lead_num = lead_val/x_steps
 
         for i in range(self.passes):
@@ -102,7 +104,7 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
             gcode.append(f"G0 X0")
         gcode.append("M5")
         gcode.append("M30")
-        output_name = "THREADS_P{0:.2f}_L{1}_D{2}.gcode".format(self.pitch, self.depth, self.cut_depth)
+        output_name = "{0}_THREADS_P{1:.2f}_L{2}_D{3}.gcode".format(name, self.pitch, self.depth, self.cut_depth)
         path_on_disk = "{}/{}".format(self._settings.getBaseFolder("watched"), output_name)
 
         with open(path_on_disk,"w") as newfile:
