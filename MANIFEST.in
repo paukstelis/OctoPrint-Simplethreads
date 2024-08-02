@@ -1,0 +1,4 @@
+include README.md
+recursive-include octoprint_SimpleThreads/templates *
+recursive-include octoprint_SimpleThreads/translations *
+recursive-include octoprint_SimpleThreads/static *

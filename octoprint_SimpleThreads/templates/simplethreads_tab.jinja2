@@ -1,0 +1,56 @@
+    <div id="simplethreads" class="row-fluid">
+        <div class="row" style="padding-left: 10px;">
+            
+            <div class="span5">
+                <label for="depth">Thread length (mm):
+                <input id="depth" type="number" step="any" data-bind="value: depth">
+                </label>
+            </div>
+            
+            <div class="span5">
+                <label for="cut_depth">Depth of threads (mm):
+                <input id="cut_depth" type="number" step="any" data-bind="value: cut_depth">
+                </label>
+            </div>
+            
+            <div class="span5">
+                <label for="passes">Passes:
+                <input id="passes" type="number" step="any" data-bind="value: passes">
+                </label>
+            </div>
+
+            <div class="span5">
+                <label for="pitch">Pitch (mm):
+                <input id="pitch" type="number" step="any" data-bind="value: pitch">
+                </label>
+            </div>
+
+            <div class="span5">
+                <label for="feed_rate">Feed Rate (inverse time):
+                <input id="feed_rate" type="number" step="any" data-bind="value: feed_rate">
+                </label>
+            </div>
+
+            <div class="span5">
+                <label for="lead_in">Lead in distance (mm):
+                <input id="lead_in" type="number" step="any" data-bind="value: lead_in">
+                </label>
+            </div>
+
+            <div class="span12">
+                <label for="oposition">Thread Type:
+                    <select class="span4" id="position" name="origin_sel" data-bind="value: origin">
+                        <option value="external">External</option>
+                        <option value="internal">Internal</option>
+                    </select>
+                </label>
+            </div>
+            
+        </div>
+        <hr>
+        <div class="row">
+            <div class="span3" style="padding-left: 10px;">
+                <button id="write_threads_button" class="btn btn-primary" data-bind="click: writeGCode">Write Threads</button>
+            </div>
+        </div>
+    </div>
