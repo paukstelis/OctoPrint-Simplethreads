@@ -15,16 +15,14 @@ $(function() {
         self.passes = ko.observable(1);
         self.feed_rate = ko.observable(2);
 
-        //tab = document.getElementById("tab_plugin_gcode_ripper_link");
-        //tab.innerHTML = tab.innerHTML.replaceAll("Gcode_ripper Plugin", "GCode Templates");
+        tab = document.getElementById("tab_plugin_SimpleThreads_link");
+        tab.innerHTML = tab.innerHTML.replaceAll("Simplethreads Plugin", "SimpleThreads");
         // assign the injected parameters, e.g.:
-        // self.loginStateViewModel = parameters[0];
-        // self.settingsViewModel = parameters[1];
+        self.loginStateViewModel = parameters[0];
+        self.settingsViewModel = parameters[1];
 
-        // TODO: Implement your plugin's view model here.
         self.writeGCode = function() {
-            //get file object
-            
+                   
             var data = {
                 depth: self.depth(),
                 cut_depth: self.cut_depth(),
