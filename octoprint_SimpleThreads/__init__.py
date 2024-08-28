@@ -53,7 +53,8 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
         gcode.append("G90")
         gcode.append("G21")
         gcode.append("STOPBANGLE")
-        gcode.append("G92 X0 Z0 A0")
+        gcode.append("BYPASS")
+        #gcode.append("G92 X0 Z0 A0")
         A_dir = "A-360"
         Z_sign = -1
         x_steps = 0
@@ -90,12 +91,12 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
                     mod_z = i*(Z_val+lead_diff)
                     gcode.append("(Lead-in move)")
                     gcode.append(f"G1 Z{mod_z:.4f} F300")
-                    gcode.append(f"G93 G1 X-{current_x:0.4f} {A_dir} F{self.feed_rate}")
+                    gcode.append(f"G93 G90 G1 X-{current_x:0.4f} {A_dir} F{self.feed_rate}")
                     gcode.append("G92 A0")
                     xstep -= 1
                 else:
                     gcode.append(f"G1 Z{i*Z_val:.4f} F300")
-                    gcode.append(f"G93 G1 X-{current_x:0.4f} {A_dir} F{self.feed_rate}")
+                    gcode.append(f"G93 G90 G1 X-{current_x:0.4f} {A_dir} F{self.feed_rate}")
                     gcode.append("G92 A0")
                
             #move to safe position
