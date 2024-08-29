@@ -27,6 +27,7 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
         self.position = "external"
         self.lead_in = float(0)
         self.feed_rate = int(2)
+        self.exit_length = float(0)
     ##~~ SettingsPlugin mixin
     def initialize(self):
         self.datafolder = self.get_plugin_data_folder()
@@ -99,6 +100,9 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
                     gcode.append(f"G93 G90 G1 X-{current_x:0.4f} {A_dir} F{self.feed_rate}")
                     gcode.append("G92 A0")
                
+            #exit depth move
+            if self.exit_length:
+                gcode.append(f"G93 G90 G1 Z0 A{self.exit_length} F{self.feed_rate}")
             #move to safe position
             gcode.append(f"G0 Z{5*Z_sign*-1}") #this is kind of silly
             #go back to start
@@ -127,6 +131,7 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
             self.pitch = float(data["pitch"])
             self.feed_rate = int(data["feed_rate"])
             self.lead_in = bool(data["lead_in"])
+            self.exit_length = float(data["exit"])
             self.position = data["position"]
             self.generate_threads()
     ##~~ Softwareupdate hook
