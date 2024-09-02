@@ -14,6 +14,7 @@ $(function() {
         self.lead_in = ko.observable(0);
         self.passes = ko.observable(1);
         self.feed_rate = ko.observable(2);
+        self.exit_length = ko.observable(0);
 
         tab = document.getElementById("tab_plugin_SimpleThreads_link");
         tab.innerHTML = tab.innerHTML.replaceAll("Simplethreads Plugin", "SimpleThreads");
@@ -31,6 +32,7 @@ $(function() {
                 feed_rate: self.feed_rate(),
                 lead_in: self.lead_in(),
                 position: self.position(),
+                exit: self.exit_length(),
             };
 
             OctoPrint.simpleApiCommand("SimpleThreads", "create_threads", data)

@@ -83,6 +83,7 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
             gcode.append(f"(Starting Pass {i})")
             current_x = 0
             xstep = x_steps
+            exit_gcode = None
             #gcode.append(f"G1 Z{i*Z_val:.4f}")
             while current_x+self.pitch <= self.depth:
                 current_x = self.pitch+current_x
@@ -102,11 +103,16 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
                
             #exit depth move
             if self.exit_length:
-                gcode.append(f"G93 G90 G1 Z0 A{self.exit_length} F{self.feed_rate}")
+                gcode.append(f"G93 G90 G1 Z0 A{self.exit_length*Z_sign} F{self.feed_rate}")
+                gcode.append("G92 A0")
+                #reverse the same about of exit length and rezero
+                exit_gcode = [f"G0 A{self.exit_length*Z_sign*-1}","G92 A0"]
             #move to safe position
             gcode.append(f"G0 Z{5*Z_sign*-1}") #this is kind of silly
             #go back to start
             gcode.append(f"G0 X0")
+            if exit_gcode:
+                gcode.extend(exit_gcode)
         gcode.append("M5")
         gcode.append("M30")
         output_name = "{0}_THREADS_P{1:.2f}_L{2}_D{3}.gcode".format(name, self.pitch, self.depth, self.cut_depth)

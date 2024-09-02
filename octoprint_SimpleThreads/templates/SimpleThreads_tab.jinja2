@@ -1,5 +1,5 @@
     <div id="simplethreads" class="row-fluid">
-        <div class="row" style="padding-left: 10px;">
+        <div class="row" style="padding-left: 20px;">
             
             <div class="span5">
                 <label for="depth">Thread length (mm):
@@ -14,7 +14,9 @@
                 <input id="pitch" type="number" step="any" data-bind="value: pitch">
                 </label>
             </div>
-            
+        </div>
+
+        <div class="row" style="padding-left: 20px;">    
             <div class="span5">
                 <label for="cut_depth">Depth of threads (mm):
                 <i class="icon icon-info-sign" title="The final depth of the threads. This value will be highly dependent on your cutter." data-toggle="tooltip"></i>
@@ -28,7 +30,8 @@
                 <input id="passes" type="number" step="any" data-bind="value: passes">
                 </label>
             </div>
-
+        </div>
+        <div class="row" style="padding-left: 20px;">
             <div class="span5">
                 <label for="feed_rate">Feed Rate (inverse time):
                 <i class="icon icon-info-sign" title="How fast the thread is cut. This is done in inverse time mode, so 1 minute divided by this value will determine how many seconds it take to do the complete rotation." data-toggle="tooltip"></i>
@@ -42,9 +45,17 @@
                 <input id="lead_in" type="number" step="any" data-bind="value: lead_in">
                 </label>
             </div>
+        </div>
+        <div class="row" style="padding-left: 20px;">
+            <div class="span5">
+                <label for="lead_in">Lead out length (degrees):
+                <i class="icon icon-info-sign" title="How far the piece will rotate in degrees after completing the last cut while the cutter returns to 0" data-toggle="tooltip"></i>
+                <input id="lead_in" type="number" step="any" data-bind="value: exit_length">
+                </label>
+            </div>
 
-            <div class="span12">
-                <label for="oposition">Thread Type:
+            <div class="span8">
+                <label for="position">Thread Type:
                 <i class="icon icon-info-sign" title="If the threads are internal or external." data-toggle="tooltip"></i>
                     <select class="span4" id="position" name="position_sel" data-bind="value: position">
                         <option value="external">External</option>
