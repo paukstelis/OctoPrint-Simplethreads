@@ -56,13 +56,13 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
         gcode.append("STOPBANGLE")
         gcode.append("BYPASS")
         #gcode.append("G92 X0 Z0 A0")
-        A_dir = "A-360"
-        Z_sign = -1
+        A_dir = "A360"
+        Z_sign = 1
         x_steps = 0
         name="EXT"
         if self.position == "internal":
-            A_dir = "A360"
-            Z_sign = 1
+            A_dir = "A-360"
+            Z_sign = -1
             name="INT"
 
         Z_val = self.cut_depth*Z_sign
