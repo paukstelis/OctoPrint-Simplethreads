@@ -92,12 +92,12 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
                     lead_diff = Z_sign*lead_num*xstep
                     mod_z = i*(Z_val+lead_diff)
                     gcode.append("(Lead-in move)")
-                    gcode.append(f"G1 Z{mod_z:.4f} F300")
+                    gcode.append(f"G1 Z{-1*mod_z:.4f} F300")
                     gcode.append(f"G93 G90 G1 X-{current_x:0.4f} {A_dir} F{self.feed_rate}")
                     gcode.append("G92 A0")
                     xstep -= 1
                 else:
-                    gcode.append(f"G1 Z{i*Z_val:.4f} F300")
+                    gcode.append(f"G1 Z{-1*i*Z_val:.4f} F300")
                     gcode.append(f"G93 G90 G1 X-{current_x:0.4f} {A_dir} F{self.feed_rate}")
                     gcode.append("G92 A0")
                
@@ -106,9 +106,9 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
                 gcode.append(f"G93 G90 G1 Z0 A{self.exit_length*Z_sign} F{self.feed_rate}")
                 gcode.append("G92 A0")
                 #reverse the same about of exit length and rezero
-                exit_gcode = [f"G0 A{self.exit_length*Z_sign*-1}","G92 A0"]
+                exit_gcode = [f"G0 A{self.exit_length*Z_sign}","G92 A0"]
             #move to safe position
-            gcode.append(f"G0 Z{5*Z_sign*-1}") #this is kind of silly
+            gcode.append(f"G0 Z{5*Z_sign}") #this is kind of silly
             #go back to start
             gcode.append(f"G0 X0")
             if exit_gcode:
