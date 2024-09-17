@@ -28,6 +28,7 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
         self.lead_in = float(0)
         self.feed_rate = int(2)
         self.exit_length = float(0)
+        self.pause_step = False
     ##~~ SettingsPlugin mixin
     def initialize(self):
         self.datafolder = self.get_plugin_data_folder()
@@ -56,12 +57,10 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
         gcode.append("STOPBANGLE")
         gcode.append("BYPASS")
         #gcode.append("G92 X0 Z0 A0")
-        A_dir = "A360"
         Z_sign = 1
         x_steps = 0
         name="EXT"
         if self.position == "internal":
-            A_dir = "A-360"
             Z_sign = -1
             name="INT"
 
@@ -80,39 +79,47 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
 
         for i in range(self.passes):
             i=i+1
+            #if last pass and we are going to pause for CA application
+            if self.passes > 1 and i == self.passes and self.pause_step:
+                gcode.append("(Pause Before final Pass)")
+                gcode.append(f"G0 Z{5*Z_sign} X10")
+                gcode.append("M0")
+                gcode.append(f"G93 G90 G1 A720 F{self.feed_rate}")
+                gcode.append("M0")
+                gcode.append("G92 A0")
+                gcode.append("G0 X0 Z0")
             gcode.append(f"(Starting Pass {i})")
             current_x = 0
+            Xval = 0
+            Aval = 360
             xstep = x_steps
             exit_gcode = None
-            #gcode.append(f"G1 Z{i*Z_val:.4f}")
-            while current_x+self.pitch <= self.depth:
-                current_x = self.pitch+current_x
-                if self.lead_in and current_x < self.lead_in:
-                    #forces 45 degree lead in
-                    lead_diff = Z_sign*lead_num*xstep
-                    mod_z = i*(Z_val+lead_diff)
-                    gcode.append("(Lead-in move)")
-                    gcode.append(f"G1 Z{-1*mod_z:.4f} F300")
-                    gcode.append(f"G93 G90 G1 X-{current_x:0.4f} {A_dir} F{self.feed_rate}")
+            last_pass = False
+
+            while current_x < self.depth:
+                next_x = self.pitch+current_x
+                Aval = 360
+                Xval = next_x
+                if next_x > self.depth:
+                    diffX = next_x - self.depth
+                    Xval = self.depth
+                    Aval = 360 - (self.pitch % diffX)*360
+                    last_pass = True
+                gcode.append(f"G1 Z{-1*i*Z_val:.4f} F300")
+                gcode.append(f"G93 G90 G1 X-{Xval:0.4f} A{Aval:0.4f} F{self.feed_rate}")
+                if not last_pass:
                     gcode.append("G92 A0")
-                    xstep -= 1
-                else:
-                    gcode.append(f"G1 Z{-1*i*Z_val:.4f} F300")
-                    gcode.append(f"G93 G90 G1 X-{current_x:0.4f} {A_dir} F{self.feed_rate}")
-                    gcode.append("G92 A0")
+                current_x = next_x
                
             #exit depth move
             if self.exit_length:
-                gcode.append(f"G93 G90 G1 Z0 A{self.exit_length*Z_sign} F{self.feed_rate}")
-                gcode.append("G92 A0")
-                #reverse the same about of exit length and rezero
-                exit_gcode = [f"G0 A{self.exit_length*Z_sign}","G92 A0"]
+                Aval = Aval+self.exit_length
+                gcode.append(f"G93 G90 G1 Z0 A{Aval:0.4f} F{self.feed_rate}")
             #move to safe position
-            gcode.append(f"G0 Z{5*Z_sign}") #this is kind of silly
-            #go back to start
-            gcode.append(f"G0 X0")
-            if exit_gcode:
-                gcode.extend(exit_gcode)
+
+            gcode.append(f"G0 Z{5*Z_sign}")
+            gcode.append(f"G93 G90 X0 A0 F{self.feed_rate}")
+
         gcode.append("M5")
         gcode.append("M30")
         output_name = "{0}_THREADS_P{1:.2f}_L{2}_D{3}.gcode".format(name, self.pitch, self.depth, self.cut_depth)
@@ -138,6 +145,7 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
             self.feed_rate = int(data["feed_rate"])
             self.lead_in = bool(data["lead_in"])
             self.exit_length = float(data["exit"])
+            self.pause_step = bool(data["pause_step"])
             self.position = data["position"]
             self.generate_threads()
     ##~~ Softwareupdate hook

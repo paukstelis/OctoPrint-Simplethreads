@@ -53,7 +53,14 @@
                 <input id="lead_in" type="number" step="any" data-bind="value: exit_length">
                 </label>
             </div>
-
+            <div class="span5">
+                <label for="lead_in">Last Pass Pause?:
+                <i class="icon icon-info-sign" title="Go to safe distance, pause, 360 rotation, pause to allow CA application." data-toggle="tooltip"></i>
+                <input id="template" type="checkbox" checked data-bind="checked: pause_step">
+                </label>
+            </div>
+        </div>
+        <div class="row" style="padding-left: 20px;">    
             <div class="span8">
                 <label for="position">Thread Type:
                 <i class="icon icon-info-sign" title="If the threads are internal or external." data-toggle="tooltip"></i>
@@ -62,8 +69,7 @@
                         <option value="internal">Internal</option>
                     </select>
                 </label>
-            </div>
-            
+            </div>    
         </div>
         <hr>
         <div class="row">
