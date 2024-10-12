@@ -55,7 +55,6 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
         gcode.append("G90")
         gcode.append("G21")
         gcode.append("STOPBANGLE")
-        gcode.append("BYPASS")
         #gcode.append("G92 X0 Z0 A0")
         Z_sign = 1
         x_steps = 0
@@ -92,6 +91,7 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
             current_x = 0
             Xval = 0
             Aval = 360
+            feed = self.feed_rate
             xstep = x_steps
             exit_gcode = None
             last_pass = False
@@ -103,10 +103,13 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
                 if next_x > self.depth:
                     diffX = next_x - self.depth
                     Xval = self.depth
+                    #fraction of full pass
                     Aval = 360 - (self.pitch % diffX)*360
+                    #feed rate compensation
+                    feed = self.feed_rate*(360/Aval)
                     last_pass = True
                 gcode.append(f"G1 Z{-1*i*Z_val:.4f} F300")
-                gcode.append(f"G93 G90 G1 X-{Xval:0.4f} A{Aval:0.4f} F{self.feed_rate}")
+                gcode.append(f"G93 G90 G1 X-{Xval:0.4f} A{Aval:0.4f} F{int(feed)}")
                 if not last_pass:
                     gcode.append("G92 A0")
                 current_x = next_x
