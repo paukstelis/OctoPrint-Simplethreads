@@ -135,9 +135,8 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
                     Aval = Aval+self.exit_length
                     gcode.append(f"G93 G90 G1 Z0 A{Aval:0.4f} F{self.feed_rate}")
                 #move to safe position
-
-            gcode.append(f"G0 Z{5*Z_sign}")
-            gcode.append(f"G93 G90 X0 A0 F{self.feed_rate}")
+                gcode.append(f"G0 Z{5*Z_sign}")
+                gcode.append(f"G93 G90 X0 A0 F{self.feed_rate}")
 
 
         gcode.append("M5")
