@@ -10,6 +10,7 @@ from __future__ import absolute_import
 # Take a look at the documentation on what other plugin mixins are available.
 
 import octoprint.plugin
+import logging
 
 class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
     octoprint.plugin.AssetPlugin,
@@ -20,7 +21,7 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
 
     ##~~ SettingsPlugin mixin
     def __init__(self):
-        self.depth = int(0)
+        self.depth = float(0)
         self.pitch = float(0)
         self.cut_depth = float(0)
         self.passes = int(1)
@@ -29,6 +30,7 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
         self.feed_rate = int(2)
         self.exit_length = float(0)
         self.pause_step = False
+        self.starts = int(1)
     ##~~ SettingsPlugin mixin
     def initialize(self):
         self.datafolder = self.get_plugin_data_folder()
@@ -76,56 +78,70 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
             x_steps = self.lead_in/self.pitch
             lead_num = lead_val/x_steps
 
-        for i in range(self.passes):
-            i=i+1
-            #if last pass and we are going to pause for CA application
-            if self.passes > 1 and i == self.passes and self.pause_step:
-                gcode.append("(Pause Before final Pass)")
-                gcode.append(f"G0 Z{5*Z_sign} X10")
-                gcode.append("M0")
-                gcode.append(f"G93 G90 G1 A720 F{self.feed_rate}")
-                gcode.append("M0")
-                gcode.append("G92 A0")
-                gcode.append("G0 X0 Z0")
-            gcode.append(f"(Starting Pass {i})")
-            current_x = 0
-            Xval = 0
-            Aval = 360
-            feed = self.feed_rate
-            xstep = x_steps
-            exit_gcode = None
-            last_pass = False
+        self.pitch = self.pitch*self.starts
 
-            while current_x < self.depth:
-                next_x = self.pitch+current_x
-                Aval = 360
-                Xval = next_x
-                if next_x > self.depth:
-                    diffX = next_x - self.depth
-                    Xval = self.depth
-                    #fraction of full pass
-                    Aval = 360 - (self.pitch % diffX)*360
-                    #feed rate compensation
-                    feed = self.feed_rate*(360/Aval)
-                    last_pass = True
-                gcode.append(f"G1 Z{-1*i*Z_val:.4f} F300")
-                gcode.append(f"G93 G90 G1 X-{Xval:0.4f} A{Aval:0.4f} F{int(feed)}")
-                if not last_pass:
+        for s in range(self.starts):
+            
+            current_A = s*360/self.starts
+            if s:
+                current_A = 360/self.starts
+            gcode.append(f"(Thread Start {s+1})")
+            gcode.append(f"G0 A{current_A}")
+            gcode.append(f"G92 A0")
+
+            for i in range(self.passes):
+                i=i+1
+                #if last pass and we are going to pause for CA application
+                if self.passes > 1 and i == self.passes and self.pause_step:
+                    gcode.append("(Pause Before final Pass)")
+                    gcode.append(f"G0 Z{5*Z_sign} X10")
+                    gcode.append("M0")
+                    gcode.append(f"G93 G90 G1 A720 F{self.feed_rate}")
+                    gcode.append("M0")
                     gcode.append("G92 A0")
-                current_x = next_x
-               
-            #exit depth move
-            if self.exit_length:
-                Aval = Aval+self.exit_length
-                gcode.append(f"G93 G90 G1 Z0 A{Aval:0.4f} F{self.feed_rate}")
-            #move to safe position
+                    gcode.append("G0 X0 Z0")
+                gcode.append(f"(Starting Pass {i})")
+                current_x = 0
+                Xval = 0
+                Aval = 360
+                feed = self.feed_rate
+                xstep = x_steps
+                exit_gcode = None
+                last_pass = False
 
-            gcode.append(f"G0 Z{5*Z_sign}")
-            gcode.append(f"G93 G90 X0 A0 F{self.feed_rate}")
+                while current_x < self.depth:
+                    next_x = self.pitch+current_x
+                    Aval = 360
+                    Xval = next_x
+                    #handle fractional depth
+                    if next_x > self.depth:
+                        remaining_distance = self.depth - current_x
+                        self._logger.info(f"Remaining distance is {remaining_distance}")
+                        Xval = self.depth
+                        # Fraction of full pass
+                        Aval = 360 * remaining_distance / self.pitch
+                        self._logger.info(f"Aval is {Aval}")
+                        # Feed rate compensation
+                        feed = self.feed_rate * (360 / Aval)
+                        last_pass = True
+                    gcode.append(f"G1 Z{-1*i*Z_val:.4f} F300")
+                    gcode.append(f"G93 G90 G1 X-{Xval:0.4f} A{Aval:0.4f} F{int(feed)}")
+                    if not last_pass:
+                        gcode.append("G92 A0")
+                    current_x = next_x
+               
+                #exit depth move
+                if self.exit_length:
+                    Aval = Aval+self.exit_length
+                    gcode.append(f"G93 G90 G1 Z0 A{Aval:0.4f} F{self.feed_rate}")
+                #move to safe position
+                gcode.append(f"G0 Z{5*Z_sign}")
+                gcode.append(f"G93 G90 X0 A0 F{self.feed_rate}")
+
 
         gcode.append("M5")
         gcode.append("M30")
-        output_name = "{0}_THREADS_P{1:.2f}_L{2}_D{3}.gcode".format(name, self.pitch, self.depth, self.cut_depth)
+        output_name = "{0}_THREADS_P{1:.2f}_L{2}_D{3}_S{4}.gcode".format(name, self.pitch, self.depth, self.cut_depth, self.starts)
         path_on_disk = "{}/{}".format(self._settings.getBaseFolder("watched"), output_name)
 
         with open(path_on_disk,"w") as newfile:
@@ -150,6 +166,7 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
             self.exit_length = float(data["exit"])
             self.pause_step = bool(data["pause_step"])
             self.position = data["position"]
+            self.starts = int(data["starts"])
             self.generate_threads()
     ##~~ Softwareupdate hook
 
