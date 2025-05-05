@@ -115,14 +115,14 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
                     Xval = next_x
                     #handle fractional depth
                     if next_x > self.depth:
-                        diffX = next_x - self.depth
-                        self._logger.info(f"Diffx is {diffX}")
+                        remaining_distance = self.depth - current_x
+                        self._logger.info(f"Remaining distance is {remaining_distance}")
                         Xval = self.depth
-                        #fraction of full pass
-                        Aval = 360*diffX/self.pitch
+                        # Fraction of full pass
+                        Aval = 360 * remaining_distance / self.pitch
                         self._logger.info(f"Aval is {Aval}")
-                        #feed rate compensation
-                        feed = self.feed_rate*(360/Aval)
+                        # Feed rate compensation
+                        feed = self.feed_rate * (360 / Aval)
                         last_pass = True
                     gcode.append(f"G1 Z{-1*i*Z_val:.4f} F300")
                     gcode.append(f"G93 G90 G1 X-{Xval:0.4f} A{Aval:0.4f} F{int(feed)}")
