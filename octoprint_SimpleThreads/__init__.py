@@ -31,6 +31,7 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
         self.exit_length = float(0)
         self.pause_step = False
         self.starts = int(1)
+        self.retract = float(5.0)
     ##~~ SettingsPlugin mixin
     def initialize(self):
         self.datafolder = self.get_plugin_data_folder()
@@ -94,7 +95,7 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
                 #if last pass and we are going to pause for CA application
                 if self.passes > 1 and i == self.passes and self.pause_step:
                     gcode.append("(Pause Before final Pass)")
-                    gcode.append(f"G0 Z{5*Z_sign} X10")
+                    gcode.append(f"G0 Z{self.retract*Z_sign} X10")
                     gcode.append("M0")
                     gcode.append(f"G93 G90 G1 A720 F{self.feed_rate}")
                     gcode.append("M0")
@@ -135,7 +136,7 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
                     Aval = Aval+self.exit_length
                     gcode.append(f"G93 G90 G1 Z0 A{Aval:0.4f} F{self.feed_rate}")
                 #move to safe position
-                gcode.append(f"G0 Z{5*Z_sign}")
+                gcode.append(f"G0 Z{self.retract*Z_sign}")
                 gcode.append(f"G93 G90 X0 A0 F{self.feed_rate}")
 
 
@@ -167,6 +168,7 @@ class SimplethreadsPlugin(octoprint.plugin.SettingsPlugin,
             self.pause_step = bool(data["pause_step"])
             self.position = data["position"]
             self.starts = int(data["starts"])
+            self.retract = float(data["retract"])
             self.generate_threads()
     ##~~ Softwareupdate hook
 

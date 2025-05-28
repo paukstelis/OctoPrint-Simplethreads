@@ -48,16 +48,23 @@
         </div>
         <div class="row" style="padding-left: 20px;">
             <div class="span5">
-                <label for="lead_in">Lead out length (degrees):
+                <label for="lead_out">Lead out length (degrees):
                 <i class="icon icon-info-sign" title="How far the piece will rotate in degrees after completing the last cut while the cutter returns to 0" data-toggle="tooltip"></i>
-                <input id="lead_in" type="number" step="any" data-bind="value: exit_length">
+                <input id="lead_out" type="number" step="any" data-bind="value: exit_length">
                 </label>
             </div>
 
             <div class="span5">
-                <label for="lead_in">Starts:
+                <label for="starts">Starts:
                 <i class="icon icon-info-sign" title="How many starts for the threads" data-toggle="tooltip"></i>
-                <input id="lead_in" type="number" step="any" data-bind="value: starts">
+                <input id="starts" type="number" step="any" data-bind="value: starts">
+                </label>
+            </div>
+
+            <div class="span5">
+                <label for="retract">Retract (mm):
+                <i class="icon icon-info-sign" title="How far the cutter will move from the 0 position between passes" data-toggle="tooltip"></i>
+                <input id="retract" type="number" step="any" data-bind="value: retract">
                 </label>
             </div>
 
