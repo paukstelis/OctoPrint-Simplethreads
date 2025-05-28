@@ -1,97 +1,79 @@
-    <div id="simplethreads" class="row-fluid">
-        <div class="row" style="padding-left: 20px;">
-            
-            <div class="span5">
-                <label for="depth">Thread length (mm):
+<div id="simplethreads" class="row-fluid">
+    <div style="display: grid; grid-column-start: 3; grid-template-columns: auto auto; gap: 10px; padding-left: 20px;">
+        <div>
+            <label for="depth">Thread length (mm):
                 <i class="icon icon-info-sign" title="The total length of threads to cut. Make sure your cutter can reach this full length." data-toggle="tooltip"></i>
-                <input id="depth" type="number" step="any" data-bind="value: depth">
-                </label>
-            </div>
-            
-            <div class="span5">
-                <label for="pitch">Pitch (mm):
+                <br><input id="depth" type="number" step="any" data-bind="value: depth">
+            </label>
+        </div>
+        <div>
+            <label for="pitch">Pitch (mm):
                 <i class="icon icon-info-sign" title="The thread pitch. The amount the cutter will move with each full rotation. Make sure you have a suitable cutter." data-toggle="tooltip"></i>
-                <input id="pitch" type="number" step="any" data-bind="value: pitch">
-                </label>
-            </div>
+                <br><input id="pitch" type="number" step="any" data-bind="value: pitch">
+            </label>
         </div>
-
-        <div class="row" style="padding-left: 20px;">    
-            <div class="span5">
-                <label for="cut_depth">Depth of threads (mm):
+        <div>
+            <label for="cut_depth">Depth of threads (mm):
                 <i class="icon icon-info-sign" title="The final depth of the threads. This value will be highly dependent on your cutter." data-toggle="tooltip"></i>
-                <input id="cut_depth" type="number" step="any" data-bind="value: cut_depth">
-                </label>
-            </div>
-            
-            <div class="span5">
-                <label for="passes">Passes:
+                <br><input id="cut_depth" type="number" step="any" data-bind="value: cut_depth">
+            </label>
+        </div>
+        <div>
+            <label for="passes">Passes:
                 <i class="icon icon-info-sign" title="The number of passes taken to reach the final thread depth." data-toggle="tooltip"></i>
-                <input id="passes" type="number" step="any" data-bind="value: passes">
-                </label>
-            </div>
+                <br><input id="passes" type="number" min="1" step="any" data-bind="value: passes">
+            </label>
         </div>
-        <div class="row" style="padding-left: 20px;">
-            <div class="span5">
-                <label for="feed_rate">Feed Rate (inverse time):
+        <div>
+            <label for="feed_rate">Feed Rate (inverse time):
                 <i class="icon icon-info-sign" title="How fast the thread is cut. This is done in inverse time mode, so 1 minute divided by this value will determine how many seconds it take to do the complete rotation." data-toggle="tooltip"></i>
-                <input id="feed_rate" type="number" step="any" data-bind="value: feed_rate">
-                </label>
-            </div>
-
-            <div class="span5">
-                <label for="lead_in">Lead in distance (mm):
+                <br><input id="feed_rate" type="number" min="1" step="any" data-bind="value: feed_rate">
+            </label>
+        </div>
+        <div>
+            <label for="lead_in">Lead in distance (mm):
                 <i class="icon icon-info-sign" title="The lead in distance makes it easier to get the threads started. Use with caution." data-toggle="tooltip"></i>
-                <input id="lead_in" type="number" step="any" data-bind="value: lead_in">
-                </label>
-            </div>
+                <br><input id="lead_in" type="number" step="any" data-bind="value: lead_in">
+            </label>
         </div>
-        <div class="row" style="padding-left: 20px;">
-            <div class="span5">
-                <label for="lead_out">Lead out length (degrees):
+        <div>
+            <label for="lead_out">Lead out length (degrees):
                 <i class="icon icon-info-sign" title="How far the piece will rotate in degrees after completing the last cut while the cutter returns to 0" data-toggle="tooltip"></i>
-                <input id="lead_out" type="number" step="any" data-bind="value: exit_length">
-                </label>
-            </div>
-
-            <div class="span5">
-                <label for="starts">Starts:
+                <br><input id="lead_out" type="number" min="0" step="any" data-bind="value: exit_length">
+            </label>
+        </div>
+        <div>
+            <label for="starts">Starts (integer):
                 <i class="icon icon-info-sign" title="How many starts for the threads" data-toggle="tooltip"></i>
-                <input id="starts" type="number" step="any" data-bind="value: starts">
-                </label>
-            </div>
-
-            <div class="span5">
-                <label for="retract">Retract (mm):
+                <br><input id="starts" type="number" min="1" step="any" data-bind="value: starts">
+            </label>
+        </div>
+        <div>
+            <label for="retract">Retract (mm):
                 <i class="icon icon-info-sign" title="How far the cutter will move from the 0 position between passes" data-toggle="tooltip"></i>
-                <input id="retract" type="number" step="any" data-bind="value: retract">
-                </label>
-            </div>
-
-
-
+                <br><input id="retract" type="number" min="0" step="any" data-bind="value: retract">
+            </label>
         </div>
-        <div class="row" style="padding-left: 20px;">    
-            <div class="span8">
-                <label for="position">Thread Type:
+        <div>
+            <label for="position">Thread Type:
                 <i class="icon icon-info-sign" title="If the threads are internal or external." data-toggle="tooltip"></i>
-                    <select class="span4" id="position" name="position_sel" data-bind="value: position">
-                        <option value="external">External</option>
-                        <option value="internal">Internal</option>
-                    </select>
-                </label>
-            </div>
-            <div class="span5">
-                <label for="lead_in">Last Pass Pause?:
-                <i class="icon icon-info-sign" title="Go to safe distance, pause, 720 rotation, pause to allow CA application." data-toggle="tooltip"></i>
-                <input id="template" type="checkbox" checked data-bind="checked: pause_step">
-                </label>
-            </div>    
+                <br><select id="position" name="position_sel" data-bind="value: position">
+                    <option value="external">External</option>
+                    <option value="internal">Internal</option>
+                </select>
+            </label>
         </div>
-        <hr>
-        <div class="row">
-            <div class="span3" style="padding-left: 10px;">
-                <button id="write_threads_button" class="btn btn-primary" data-bind="click: writeGCode">Write Threads</button>
-            </div>
+        <div>
+            <label for="pause_step">Last Pass Pause?:
+                <i class="icon icon-info-sign" title="Go to safe distance, pause, 720 rotation, pause to allow CA application." data-toggle="tooltip"></i>
+                <input id="pause_step" type="checkbox" checked data-bind="checked: pause_step">
+            </label>
         </div>
     </div>
+    <hr>
+    <div class="row">
+        <div class="span3" style="padding-left: 10px;">
+            <button id="write_threads_button" class="btn btn-primary" data-bind="click: writeGCode">Write Threads</button>
+        </div>
+    </div>
+</div>
